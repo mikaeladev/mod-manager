@@ -5,6 +5,7 @@ use crate::utils::mutex::MutexGuard;
 
 use super::app::{App, AppConfig, AppState};
 use super::dialogs::{AddGameDialog, Dialog};
+use super::widgets::TabButtonsUiExt;
 
 #[derive(Debug, Default, Deserialize, Serialize, PartialEq)]
 pub enum RootTab {
@@ -92,17 +93,14 @@ impl<'a> Root<'a> {
 
           // tab buttons
           ui.add_enabled_ui(self.state.selected_game.is_some(), |ui| {
-            ui.horizontal(|ui| {
-              if ui.button("Game").clicked() {
-                self.state.selected_tab = RootTab::Game;
-              };
-              if ui.button("Mods").clicked() {
-                self.state.selected_tab = RootTab::Mods;
-              };
-              if ui.button("Deployers").clicked() {
-                self.state.selected_tab = RootTab::Deployers;
-              };
-            });
+            ui.tab_buttons(
+              &mut self.state.selected_tab,
+              [
+                ("Game", RootTab::Game),
+                ("Mods", RootTab::Mods),
+                ("Deployers", RootTab::Deployers),
+              ],
+            );
           });
         });
       });
